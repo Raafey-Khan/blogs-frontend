@@ -2,7 +2,19 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../services/api';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
+
+export interface AuthState {
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: AuthState = {
+  token: null,
+  loading: false,
+  error: null,
+};
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -18,7 +30,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (credentials: { username: string; password: string }, thunkAPI) => {
@@ -32,11 +43,7 @@ export const registerUser = createAsyncThunk(
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    token: null,
-    loading: false,
-    error: null as null | string,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       state.token = null;
@@ -53,16 +60,13 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload;
         localStorage.setItem('token', action.payload);
-        toast.success("Login successful!")
+        toast.success('Login successful!');
       })
-
       .addCase(loginUser.rejected, (state, action) => {
-  state.loading = false;
-  state.error = action.payload as string;
-  toast.error(state.error || "Login failed.")
-})
-
-     
+        state.loading = false;
+        state.error = action.payload as string;
+        toast.error(state.error || 'Login failed.');
+      });
   },
 });
 

@@ -2,6 +2,26 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../services/api';
+import { RootState } from '../StoreProvider'; // adjust path if needed
+
+export interface Blog {
+  _id: string;
+  title: string;
+  content: string;
+  [key: string]: any;
+}
+
+export interface BlogState {
+  blogs: Blog[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: BlogState = {
+  blogs: [],
+  loading: false,
+  error: null,
+};
 
 export const fetchBlogs = createAsyncThunk('blogs/fetch', async (_, thunkAPI) => {
   try {
@@ -21,7 +41,7 @@ export const createBlog = createAsyncThunk(
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: formData, // 👈 send multipart/form-data
+      body: formData,
     });
 
     if (!res.ok) throw new Error('Failed to create blog');
@@ -29,15 +49,17 @@ export const createBlog = createAsyncThunk(
   }
 );
 
-
-export const updateBlog = createAsyncThunk('blogs/update', async ({ id, data }: { id: string; data: any }, thunkAPI) => {
-  try {
-    const res = await API.put(`/blogs/${id}`, data);
-    return res.data;
-  } catch (err: any) {
-    return thunkAPI.rejectWithValue(err.response.data);
+export const updateBlog = createAsyncThunk(
+  'blogs/update',
+  async ({ id, data }: { id: string; data: Partial<Blog> }, thunkAPI) => {
+    try {
+      const res = await API.put(`/blogs/${id}`, data);
+      return res.data;
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
   }
-});
+);
 
 export const deleteBlog = createAsyncThunk('blogs/delete', async (id: string, thunkAPI) => {
   try {
@@ -50,11 +72,7 @@ export const deleteBlog = createAsyncThunk('blogs/delete', async (id: string, th
 
 const blogSlice = createSlice({
   name: 'blog',
-  initialState: {
-    blogs: [] as any[],
-    loading: false,
-    error: null as null | string,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

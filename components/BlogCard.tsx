@@ -4,7 +4,7 @@ import { useAppDispatch } from '../store/StoreProvider';
 import { deleteBlog } from '../store/slices/blogSlice';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
-import Image from 'next/image';
+
 const BlogCard = ({ blog, onEdit }: { blog: any; onEdit: (b: any) => void }) => {
   const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState(false);
@@ -29,7 +29,7 @@ const BlogCard = ({ blog, onEdit }: { blog: any; onEdit: (b: any) => void }) => 
     <>
       <div className="bg-white shadow-md rounded overflow-hidden mb-6">
         {blog.image && (
-          <Image
+          <img
             src={`https://blogs-backend-jx2t.onrender.com/uploads/${blog.image}`}
             alt="Blog Cover"
             className="w-full h-64 object-contain"
