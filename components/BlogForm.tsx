@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../store/StoreProvider';
 import { createBlog, updateBlog } from '../store/slices/blogSlice';
 import { toast } from 'react-toastify';
-
+import Image from 'next/image';
 export default function BlogForm({ editing, onCloseAction }: { editing?: any; onCloseAction: () => void; }) {
   const dispatch = useAppDispatch();
   const [title, setTitle] = useState('');
@@ -75,7 +75,7 @@ export default function BlogForm({ editing, onCloseAction }: { editing?: any; on
         </label>
         <input id="imageUpload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
       </div>
-      {preview && <img src={preview} alt="Preview" className="w-full h-48 object-contain rounded" />}
+      {preview && <Image src={preview} alt="Preview" className="w-full h-48 object-contain rounded" />}
       <textarea name="content" value={content} onChange={e=>setContent(e.target.value)}
         placeholder="Content" className="w-full p-2 border rounded h-32" />
       <div className="flex justify-end gap-2">
